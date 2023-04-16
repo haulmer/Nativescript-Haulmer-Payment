@@ -1,0 +1,73 @@
+{
+  "name": "haulmer-payment",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/haulmer-payment",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "options": {
+        "outputPath": "dist/packages/haulmer-payment",
+        "tsConfig": "packages/haulmer-payment/tsconfig.json",
+        "packageJson": "packages/haulmer-payment/package.json",
+        "main": "packages/haulmer-payment/index.d.ts",
+        "assets": [
+          "packages/haulmer-payment/*.md",
+          "packages/haulmer-payment/index.d.ts",
+          "LICENSE",
+          {
+            "glob": "**/*",
+            "input": "packages/haulmer-payment/platforms/",
+            "output": "./platforms/"
+          }
+        ],
+        "dependsOn": [
+          {
+            "target": "build.all",
+            "projects": "dependencies"
+          }
+        ]
+      }
+    },
+    "build.all": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "node tools/scripts/build-finish.ts haulmer-payment"
+        ],
+        "parallel": false
+      },
+      "outputs": [
+        "dist/packages/haulmer-payment"
+      ],
+      "dependsOn": [
+        {
+          "target": "build.all",
+          "projects": "dependencies"
+        },
+        {
+          "target": "build",
+          "projects": "self"
+        }
+      ]
+    },
+    "focus": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx g @nativescript/plugin-tools:focus-packages haulmer-payment"
+        ],
+        "parallel": false
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "packages/haulmer-payment/**/*.ts"
+        ]
+      }
+    }
+  },
+  "tags": []
+}
